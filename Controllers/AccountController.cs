@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Reddit.Controllers;
 [ApiController]
 [Route("/api/[controller]")]
-public class AccountController
+public class AccountController :ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<User> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly TokenService _tokenService;
 
-    public AccountController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
+    public AccountController(UserManager<User> userManager, ApplicationDbContext context,
     TokenService tokenService, ILogger<AccountController> logger)
     {
         _userManager = userManager;
@@ -32,7 +32,7 @@ public class AccountController
         }
 
         var result = await _userManager.CreateAsync(
-            new ApplicationUser { UserName = request.Username, Email = request.Email, RefreshToken = _tokenService.GenerateRefreshToken(), RefreshTokenExpiryTime = DateTime.Now.AddDays(7) },
+            new User { UserName = request.Username, Email = request.Email, RefreshToken = _tokenService.GenerateRefreshToken(), RefreshTokenExpiryTime = DateTime.Now.AddDays(7) },
             request.Password!
         );
 
